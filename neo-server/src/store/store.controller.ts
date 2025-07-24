@@ -59,6 +59,6 @@ export class StoreController {
 		@Param('id') storeId: string,
 		@CurrentUser('id') userId: string
 	) {
-		return this.storeService.delete(storeId, userId)
+		return this.storeService.delete(userId,storeId)
 	}
 }

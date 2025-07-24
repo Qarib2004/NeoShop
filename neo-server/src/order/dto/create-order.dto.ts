@@ -10,7 +10,7 @@ class OrderItemDto {
   quantity: number;
 
   @IsNumber()
-  price: number;
+  price?: number;
 }
 
 export class CreateOrderDto {

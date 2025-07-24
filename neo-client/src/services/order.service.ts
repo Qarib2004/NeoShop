@@ -16,10 +16,8 @@ export const OrderService = {
 	},
 
 	async createPayPalPayment(orderId: string) {
-		return axios.post(`${API_URL}/orders/${orderId}/paypal/create`)
+		return axios.post(`${API_URL}/orders/${orderId}/stripe/create`)
 	},
 
-	async capturePayPalPayment(orderId: string) {
-		return axios.post(`${API_URL}/orders/${orderId}/paypal/capture`)
-	}
+	
 }

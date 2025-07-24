@@ -2,7 +2,7 @@ import React from 'react'
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/Chart'
 
 import { IMonthlySales } from '@/shared/types/statistic.interface'
 import { formatPriceAZE } from '@/utils/string/format-price'
