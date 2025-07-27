@@ -12,11 +12,11 @@ import { useMemo } from "react"
 
 
 
-export const useCreateProduct = () => {
+export const useGetProduct = () => {
     const params = useParams<{storeId:string}>()
 
     const {data:products,isLoading} = useQuery({
-        queryKey:['get products for dtore dashboard'],
+        queryKey:['get products for store dashboard'],
         queryFn:() => productService.getByStoreId(params.storeId)
     })
 

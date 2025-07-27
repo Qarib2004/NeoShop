@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ColorService } from './color.service';
 import {Auth} from 'src/auth/decorators/auth.decorator'
 import { CurrentUser } from 'src/user/decorators/user.decorator';
@@ -42,7 +42,7 @@ export class ColorController {
   
   @HttpCode(200)
   @Auth()
-  @Put(':id')
+  @Delete(':id')
   async delete(@Param('id') id:string){
        return this.colorService.delete(id)
   }

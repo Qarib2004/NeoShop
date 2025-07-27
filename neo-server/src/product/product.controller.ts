@@ -55,7 +55,7 @@ export class ProductController {
 	@Auth()
 	@Get('by-storeId/:storeId')
 	async getByStoreId(@Param('storeId') storeId: string) {
-		return this.productService.getAll(storeId)
+		return this.productService.getByStoreId(storeId)
 	}
 
 	@Get('by-id/:id')

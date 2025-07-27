@@ -14,14 +14,15 @@ class ColorService {
 		return data || []
 	}
 
-	async getStoreId(id: string) {
-		const { data } = await axiosWithAuth<IColor>({
-			url: API_URL.colors(`/by-id/${id}`),
-			method: 'GET'
+	async getStoreId(storeId: string) {
+		const { data } = await axiosWithAuth<IColor[]>({
+		  url: API_URL.colors(`/by-storeId/${storeId}`), // ✅ это правильный endpoint
+		  method: 'GET'
 		})
-
+	  
 		return data
-	}
+	  }
+	  
 
 	async getById(id: string) {
 		const { data } = await axiosWithAuth<IColor>({

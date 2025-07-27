@@ -17,7 +17,11 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'www.pngmart.com' 
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
     ]
   },
   async rewrites() {

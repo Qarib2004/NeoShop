@@ -25,13 +25,14 @@ class ProductService {
 	}
 
 	async getById(id: string) {
-		const { data } = await axiosClassic<IProduct[]>({
+		const { data } = await axiosClassic<IProduct>({
 			url: API_URL.products(`/by-id/${id}`),
 			method: 'GET'
 		})
-
+	
 		return data
 	}
+	
 
 	async getByCategory(categoryId: string) {
 		const { data } = await axiosClassic<IProduct[]>({
