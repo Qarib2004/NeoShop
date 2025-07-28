@@ -1,9 +1,15 @@
 import React from 'react'
+import { Hero } from './hero/Hero'
+import { IProduct } from '@/shared/types/product.interface'
 
-const Home = () => {
-  return (
-    <div>Home</div>
-  )
+
+interface HomeProps{
+  products:IProduct[]
 }
 
-export default Home
+export function Home  ({products}:HomeProps) {
+  return <>
+  <Hero/>
+  </>
+}
+

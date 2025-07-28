@@ -1,9 +1,10 @@
+import { MainLayout } from '@/components/layouts/main-layout/MainLayout'
 import React, { PropsWithChildren } from 'react'
 
 
 const Layout = ({children}:PropsWithChildren<unknown>) => {
   return (
-    <div>{children}</div>
+    <MainLayout>{children}</MainLayout>
   )
 }
 

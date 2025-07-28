@@ -72,16 +72,17 @@ export function ProductForm({ product, categories, colors }: ProductFormProps) {
 
 	const onSubmit: SubmitHandler<IProductInput> = data => {
 		data.price = Number(data.price)
-		if (product) updateProduct(data)
+		if (product && product.id) updateProduct({ productId: product.id, data })
 		else createProduct(data)
-	}
+	  }
+	  
 
 	return (
 		<div className='max-w-4xl mx-auto p-6'>
 			<div className='flex items-center justify-between mb-8'>
 				<Heading title={title} description={description} />
 				{product && (
-					<ConfirmModal handleClick={() => deleteProduct()}>
+					<ConfirmModal handleClick={() => deleteProduct(product.id)}>
 						<Button
 							size='icon'
 							variant='primary'
@@ -110,7 +111,7 @@ export function ProductForm({ product, categories, colors }: ProductFormProps) {
 									Images
 								</FormLabel>
 								<FormControl>
-									<ImageUpload isDisabled={isLoadingCreate || isLoadingUpdate} onChange={field.onChange} value={field.value}/>
+									<ImageUpload isDisabled={isLoadingCreate || isLoadingUpdate} onChange={(urls) => field.onChange([...field.value, ...urls])} value={field.value}/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>

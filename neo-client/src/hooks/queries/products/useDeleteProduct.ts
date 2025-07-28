@@ -16,30 +16,28 @@ import toast from "react-hot-toast"
 
 
 export const useDeleteProduct = () => {
-    const params = useParams<{storeId:string}>()
-
-    const router= useRouter()
-
+    const params = useParams<{ storeId: string }>()
+    const router = useRouter()
     const queryClient = useQueryClient()
-
-
-    const {mutate:deleteProduct,isPending:isLoadingDelete} = useMutation({
-         mutationKey:['delete product'],
-         mutationFn:() => 
-            productService.delete(params.storeId),
-         onSuccess(){
-            queryClient.invalidateQueries({
-                queryKey:['get products for store dashboard']
-            })
-            toast.success("Goods deleted")
-            router.push(STORE_URL.products(params.storeId))
-         },
-         onError(){
-            toast.error("Error delete goods")
-         }
+  
+    const { mutate: deleteProduct, isPending: isLoadingDelete } = useMutation({
+      mutationKey: ['delete product'],
+      mutationFn: (productId: string) => 
+        productService.delete(productId),
+      onSuccess() {
+        queryClient.invalidateQueries({
+          queryKey: ['get products for store dashboard']
+        })
+        toast.success("Goods deleted")
+        router.push(STORE_URL.products(params.storeId))
+      },
+      onError() {
+        toast.error("Error delete goods")
+      }
     })
-
+  
     return useMemo(() => ({
-        deleteProduct,isLoadingDelete
-    }),[deleteProduct,isLoadingDelete])
-}
+      deleteProduct, isLoadingDelete
+    }), [deleteProduct, isLoadingDelete])
+  }
+  

@@ -7,7 +7,7 @@ import { STORE_URL } from '@/config/url.config'
 import { useMemo } from 'react'
 
 export const useUpdateCategory = () => {
-  const params = useParams<{ categoryId: string }>()
+  const params = useParams<{ categoryId: string,storeId: string  }>()
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -20,6 +20,7 @@ export const useUpdateCategory = () => {
         queryKey: ['get categories for store dashboard']
       })
       toast.success('Category updated')
+      router.push(STORE_URL.categories(params.storeId))
     },
     onError() {
       toast.error('Error updating category')

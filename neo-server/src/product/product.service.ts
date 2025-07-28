@@ -157,7 +157,7 @@ export class ProductService {
 
 	async update(id: string, dto: ProductDto) {
 		await this.getById(id)
-		return this.prisma.store.update({
+		return this.prisma.product.update({
 			where: { id },
 			data: dto
 		})
@@ -165,7 +165,7 @@ export class ProductService {
 
 	async delete(id: string) {
 		await this.getById(id)
-		return this.prisma.color.delete({
+		return this.prisma.product.delete({
 			where: {
 				id
 			}

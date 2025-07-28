@@ -42,7 +42,7 @@ class ProductService {
 		return data
 	}
 
-	async getMostPopilar() {
+	async getMostPopular() {
 		const { data } = await axiosClassic<IProduct[]>({
 			url: API_URL.products('/most-popular'),
 			method: 'GET'
@@ -61,7 +61,7 @@ class ProductService {
 	}
 
 	async create(data: IProductInput, storeId: string) {
-		const { data: createdProduct } = await axiosWithAuth<IProduct[]>({
+		const { data: createdProduct } = await axiosWithAuth<IProduct>({
 			url: API_URL.products(`/${storeId}`),
 			method: 'POST',
 			data
@@ -70,7 +70,7 @@ class ProductService {
 	}
 
 	async update(id: string, data: IProductInput) {
-		const { data: updateProduct } = await axiosWithAuth<IProduct[]>({
+		const { data: updateProduct } = await axiosWithAuth<IProduct>({
 			url: API_URL.products(`/${id}`),
 			method: 'PUT',
 			data
@@ -79,7 +79,7 @@ class ProductService {
 	}
 
 	async delete(id: string) {
-		const { data: deleteProduct } = await axiosWithAuth<IProduct[]>({
+		const { data: deleteProduct } = await axiosWithAuth<IProduct>({
 			url: API_URL.products(`/${id}`),
 			method: 'DELETE'
 		})

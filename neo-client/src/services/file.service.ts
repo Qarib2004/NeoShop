@@ -5,7 +5,7 @@ import { API_URL } from "@/config/api.config"
 class FileService {
     async uploadMultiple(files: FormData, folder?: string): Promise<string[]> {
         const { data } = await axiosWithAuth<{ urls: string[] }>({
-            url: API_URL.files('/multiple'), // Ensure this matches your backend route
+            url: API_URL.files('/multiple'), 
             method: 'POST',
             data: files,
             params: { folder },
@@ -18,7 +18,7 @@ class FileService {
 
     async uploadSingle(file: FormData, folder?: string): Promise<string> {
         const { data } = await axiosWithAuth<{ url: string }>({
-            url: API_URL.files('/single'), // Ensure this matches your backend route
+            url: API_URL.files('/single'), 
             method: 'POST',
             data: file,
             params: { folder },

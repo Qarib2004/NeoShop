@@ -75,7 +75,7 @@ export class ProductController {
 
 	@Get('similar/:id')
 	async getMostSimilar(@Param('id') id:string) {
-		return this.productService.getMostPopular()
+		return this.productService.getSimilar(id)
 	}
 
 
@@ -96,7 +96,7 @@ export class ProductController {
   @Auth()
   @Put(':id')
   async update(@Param('id') id:string, @Body() dto:ProductDto){
-    return this.productService.create(id,dto)
+    return this.productService.update(id,dto)
   }
 
 

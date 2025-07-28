@@ -8,6 +8,7 @@ import { cn } from '@/utils/clsx'
 import { Button } from '../../Button'
 
 import { useUpload } from './useUpload'
+import { useState } from 'react'
 
 interface ImageUploadProps {
 	isDisabled: boolean
@@ -18,6 +19,8 @@ interface ImageUploadProps {
 export function ImageUpload({ isDisabled, onChange, value }: ImageUploadProps) {
 	const { handleButtonClick, isUploading, fileInputRef, handleFileChange } =
 		useUpload(onChange)
+
+		const [images, setImages] = useState<string[]>([])
 
 	return (
 		<div>
@@ -32,6 +35,7 @@ export function ImageUpload({ isDisabled, onChange, value }: ImageUploadProps) {
 							src={url}
 							alt='image'
 							fill
+							sizes="200px"
 						/>
 					</div>
 				))}

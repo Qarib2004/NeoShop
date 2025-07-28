@@ -2,13 +2,12 @@ import { Controller, Post, Query, UploadedFile, UploadedFiles, UseInterceptors }
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
-// file.controller.ts
 @Controller('files')
 export class FileController {
     constructor(private readonly cloudinaryService: CloudinaryService) {}
 
     @Post('multiple')
-    @UseInterceptors(FilesInterceptor('files',10)) // Must match 'files' from formData.append()
+    @UseInterceptors(FilesInterceptor('files',10)) 
     async uploadMultiple(
         @UploadedFiles() files: Express.Multer.File[],
         @Query('folder') folder?: string
@@ -18,7 +17,7 @@ export class FileController {
     }
 
     @Post('single')
-    @UseInterceptors(FileInterceptor('file')) // For single file upload
+    @UseInterceptors(FileInterceptor('file')) 
     async uploadSingle(
         @UploadedFile() file: Express.Multer.File,
         @Query('folder') folder?: string

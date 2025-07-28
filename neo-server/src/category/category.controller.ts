@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import {Auth} from 'src/auth/decorators/auth.decorator'
 import { CurrentUser } from 'src/user/decorators/user.decorator';
@@ -41,7 +41,7 @@ export class CategoryController {
   
   @HttpCode(200)
   @Auth()
-  @Put(':id')
+  @Delete(':id')
   async delete(@Param('id') id:string){
        return this.categoryService.delete(id)
   }
