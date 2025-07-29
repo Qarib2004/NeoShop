@@ -34,10 +34,10 @@ class ProductService {
 	}
 	
 
-	async getByCategory(categoryId: string) {
+	async getByCategory(categoryId: string,token?: string) {
 		const { data } = await axiosClassic<IProduct[]>({
 			url: API_URL.products(`/by-category/${categoryId}`),
-			method: 'GET'
+			method: 'GET',
 		})
 		return data
 	}

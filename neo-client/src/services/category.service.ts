@@ -33,14 +33,14 @@ class CategoryService {
 	}
 
 
-	async getById(id: string) {
-		const { data } = await axiosWithAuth<ICategory>({
+	async getById(id: string, token?: string) {
+		const { data } = await axiosClassic<ICategory>({
 		  url: API_URL.categories(`/by-id/${id}`),
-		  method: 'GET'
+		  method: 'GET',
 		})
-	  
 		return data
 	  }
+	  
 	  
 
 	async update(id: string, data: ICategoryInput) {

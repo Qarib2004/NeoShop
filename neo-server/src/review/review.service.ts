@@ -35,9 +35,9 @@ export class ReviewService {
 	}
 
 
-    async create(userId:string,producId:string,storeId:string,dto:ReviewDto){
+    async create(userId:string,productId:string,storeId:string,dto:ReviewDto){
 
-        await this.productService.getById(producId)
+        await this.productService.getById(productId)
 
 
         return this.prisma.review.create({
@@ -45,7 +45,7 @@ export class ReviewService {
                 ...dto,
                 product:{
                     connect:{
-                        id:producId
+                        id:productId
                     }
                 },
                 user:{

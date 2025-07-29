@@ -32,7 +32,11 @@ export class UserService {
 		  where: { id: userId },
 		  include: {
 			stores: true,
-			favorites: true,
+			favorites: {
+				include:{
+					category:true
+				}
+			},
 			orders: true
 		  }
 		});

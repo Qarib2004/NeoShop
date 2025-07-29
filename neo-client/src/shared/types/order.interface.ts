@@ -1,7 +1,8 @@
 export interface PayPalOrder {
     id: string;
     status: string;
-    amount: number;
+    total: number;
+    createdAt:string,
     currency: string;
     approvalUrl?: string;
   }
@@ -44,3 +45,9 @@ export interface PayPalOrder {
     onError?: (error: any) => void;
     onCancel?: () => void;
   }
+
+  export enum EnumOrderStatus {
+    PENDING = 'PENDING',
+    COMPLETED = 'COMPLETED',
+  }
+  

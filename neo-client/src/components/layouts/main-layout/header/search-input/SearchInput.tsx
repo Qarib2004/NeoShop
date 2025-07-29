@@ -17,7 +17,7 @@ export function SearchInput(){
 
     return <div className="flex items-center relative">
         <Input className="rounded-lg rounded-r-none focus-visible:ring-transparent pr-8" placeholder="Search..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}/>
-        <Button className="rounded-l-none" variant='primary' onChange={() => router.push(PUBLIC_URL.explorer(`?searchTerm=${searchTerm}`))}>
+        <Button className="rounded-l-none" variant='primary' onClick={() => router.push(PUBLIC_URL.explorer(`?searchTerm=${searchTerm}`))}>
             <Search className="size-4"/>
         </Button>
     </div>
