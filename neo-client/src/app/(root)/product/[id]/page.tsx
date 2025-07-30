@@ -7,7 +7,7 @@ import { Product } from './Product'
 
 export const revalidate = 60
 
-export async function generateStatisParams() {
+export async function generateStaticParams() {
 	const products = await productService.getAll()
 
 	const paths = products.map(product => {
@@ -19,10 +19,10 @@ export async function generateStatisParams() {
 	return paths
 }
 
-async function getProducts(params: { id: string }) {
+async function getProducts(id: string) {
 	try {
-		const product = await productService.getById(params.id)
-		const similarProducts = await productService.getSimilar(params.id)
+		const product = await productService.getById(id)
+		const similarProducts = await productService.getSimilar(id)
 
 		return { product, similarProducts }
 	} catch (error) {
@@ -30,14 +30,17 @@ async function getProducts(params: { id: string }) {
 	}
 }
 
-export async function generetaeMetadata({
+export async function generateMetadata({
 	params
 }: {
-	params: { id: string }
+	params: Promise<{ id: string }>
 }): Promise<Metadata> {
+	const { id } = await params
+	const { product } = await getProducts(id)
 
-	
-	const { product } = await getProducts(params)
+	if (!product) {
+		return {}
+	}
 
 	return {
 		title: product.title,
@@ -58,9 +61,16 @@ export async function generetaeMetadata({
 export default async function ProductPage({
 	params
 }: {
-	params: { id: string }
+	params: Promise<{ id: string }>
 }) {
-	const {product ,similarProducts} = await getProducts(params)
+	const { id } = await params
+	const { product, similarProducts } = await getProducts(id)
 
-	return <Product initialProduct={product} similarProduct={similarProducts} id={params.id}/>
+	return (
+		<Product 
+			initialProduct={product} 
+			similarProduct={similarProducts} 
+			id={id}
+		/>
+	)
 }

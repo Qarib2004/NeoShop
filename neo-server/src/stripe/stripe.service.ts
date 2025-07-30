@@ -25,13 +25,13 @@ export class StripeService {
             product_data: {
               name: 'NeoShop Order',
             },
-            unit_amount: total * 100, // Stripe принимает сумму в центах
+            unit_amount: total * 100,
           },
           quantity: 1,
         },
       ],
       mode: 'payment',
-      success_url: `${this.configService.get<string>('CLIENT_URL')}/orders/${orderId}/success`,
+      success_url: `${this.configService.get<string>('CLIENT_URL')}/thanks`,
       cancel_url: `${this.configService.get<string>('CLIENT_URL')}/orders/${orderId}/cancel`,
       metadata: {
         orderId,

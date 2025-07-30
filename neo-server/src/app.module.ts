@@ -12,9 +12,10 @@ import { ProductModule } from './product/product.module';
 import { PayPalModule } from './paypal/paypal.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { StripeModule } from './stripe/stripe.module';
+import { ReviewModule } from './review/review.module';
 
 
 @Module({
-  imports: [ConfigModule.forRoot(),AuthModule, UserModule, ColorModule, CategoryModule, FileModule, StoreModule, OrderModule, StatisticsModule, ProductModule, PayPalModule, CloudinaryModule, StripeModule],
+  imports: [ConfigModule.forRoot(),AuthModule, UserModule, ColorModule, CategoryModule, FileModule, StoreModule, OrderModule, StatisticsModule, ProductModule, PayPalModule, CloudinaryModule, StripeModule,ReviewModule],
 })
 export class AppModule {}

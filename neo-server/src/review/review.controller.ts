@@ -34,6 +34,7 @@ export class ReviewController {
 		@Param('storeId') storeId: string,
 		@Body() dto: ReviewDto
 	) {
+		console.log('Params:', { productId, storeId });
 		return this.reviewService.create(userId, productId, storeId, dto)
 	}
 

@@ -6,10 +6,7 @@ export function formatPriceRU(price:number){
     })
 }
 
-export function formatPriceAZE(price: number) {
-    return price.toLocaleString('az-Latn-AZ', {
-        style: 'currency',
-        currency: 'AZN',
-        minimumFractionDigits: 0
-    });
+export function formatPriceAZE(price: number): string {
+    // Простое форматирование без локализации - одинаково везде
+    return `${Math.round(price)} AZN`;
 }

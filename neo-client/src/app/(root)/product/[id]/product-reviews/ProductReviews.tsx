@@ -34,12 +34,12 @@ export function ProductReview({product} : ProductReviewProps){
         <div className="grid sm:grid-cols-2  md:grid-cols-2 lg:grid-cols-4 gap-8 mt-4">
             {product.reviews.length ?(
                product.reviews.map(review => (
-                <div className="border rounded-lg p-4">
+                <div key={review.id} className="border rounded-lg p-4">
                     <div className="flex justify-between">
                         <div className="flex  items-center gap-x-4 font-medium">
                             <Image 
                             className="rounded-full"
-                            src={review.user.picture || ""}
+                            src={review.user.picture?.trimEnd() || ""}
                             alt={review.user.name}
                             width={40}
                             height={40}/>
@@ -48,7 +48,7 @@ export function ProductReview({product} : ProductReviewProps){
                         {review.user.id === user?.id && (
                             <ConfirmModal handleClick={() =>deleteReview(review.id)}>
                                 <button className="mt-3 text-red-500">
-                                    <Trash className="size-5"/>
+                                    <Trash className="size-5 cursor-pointer"/>
                                 </button>
                             </ConfirmModal>
                         )}

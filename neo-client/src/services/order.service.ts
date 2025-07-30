@@ -1,23 +1,39 @@
-import axios from 'axios'
+import { axiosWithAuth } from '@/api/api.interceptors'
+import { API_URL } from '@/config/api.config'
 
-const API_URL = process.env.APP_URL
+class OrderService {
+  async createOrder(data: any) {
+    const { data: createdOrder } = await axiosWithAuth({
+      url: API_URL.orders(),
+      method: 'POST',
+      data
+    })
+    return createdOrder
+  }
 
-export const OrderService = {
-	async createOrder(data: any) {
-		return axios.post(`${API_URL}/orders`, data)
-	},
+  async getOrder(id: string) {
+    const { data: order } = await axiosWithAuth({
+      url: API_URL.orders(`/${id}`),
+      method: 'GET'
+    })
+    return order
+  }
 
-	async getOrder(id: string) {
-		return axios.get(`${API_URL}/orders/${id}`)
-	},
+  async getUserOrders() {
+    const { data: orders } = await axiosWithAuth({
+      url: API_URL.orders(),
+      method: 'GET'
+    })
+    return orders
+  }
 
-	async getUserOrders() {
-		return axios.get(`${API_URL}/orders`)
-	},
-
-	async createPayPalPayment(orderId: string) {
-		return axios.post(`${API_URL}/orders/${orderId}/stripe/create`)
-	},
-
-	
+  async createStripePayment(orderId: string) {
+    const { data: payment } = await axiosWithAuth({
+      url: API_URL.orders(`/${orderId}/stripe/create`),
+      method: 'POST'
+    })
+    return payment
+  }
 }
+
+export const orderService = new OrderService()

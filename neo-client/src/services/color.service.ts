@@ -16,7 +16,7 @@ class ColorService {
 
 	async getStoreId(storeId: string) {
 		const { data } = await axiosWithAuth<IColor[]>({
-		  url: API_URL.colors(`/by-storeId/${storeId}`), // ✅ это правильный endpoint
+		  url: API_URL.colors(`/by-storeId/${storeId}`), 
 		  method: 'GET'
 		})
 	  
