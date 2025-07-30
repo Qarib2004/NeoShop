@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "yarn nest build --path tsconfig.build.json && prisma generate",
+    "build": "npx nest build --path tsconfig.build.json && prisma generate",
     "render-build": "rm -rf dist/ && yarn install && yarn build && cp -r prisma/ dist/",
     "render-start": "yarn start:prod",
     "start:prod": "node dist/main.js",
