@@ -7,18 +7,19 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build --path tsconfig.build.json && prisma generate",    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "render-build": "rm -rf dist/ && yarn install && yarn build && cp -r prisma/ dist/",
+    "render-start": "yarn start:prod",
+    "start:prod": "node dist/main.js",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/src/main.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "render-build": "rm -rf dist/ && yarn install && yarn build && cp -r prisma/ dist/",
-    "render-start": "yarn start:prod"
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+   
   },
   "dependencies": {
     "@a2seven/yoo-checkout": "^1.1.4",
