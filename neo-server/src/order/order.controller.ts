@@ -12,7 +12,6 @@ import {
 import { OrderService } from './order.service'
 import { CreateOrderDto } from './dto/create-order.dto'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { Order } from 'generated/prisma'
 import { RequestWithUser } from 'src/auth/interface/request-with-user'
 import { StripeService } from 'src/stripe/stripe.service'
 

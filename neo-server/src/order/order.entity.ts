@@ -1,4 +1,4 @@
-import { User } from 'generated/prisma'
+import { User } from '@prisma/client'
 import { OrderStatus } from './order-status.enum'
 
 export class Order {

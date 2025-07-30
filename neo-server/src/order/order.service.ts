@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { CreateOrderDto } from './dto/create-order.dto'
-// import { Order } from './order.entity'
 import { OrderStatus, Order } from '@prisma/client'
 
 @Injectable()
@@ -23,12 +22,11 @@ export class OrderService {
 				return {
 					productId: item.productId,
 					quantity: item.quantity,
-					price: product.price // используем цену из базы, а не из dto
+					price: product.price 
 				}
 			})
 		)
 
-		// Считаем total по реальным ценам
 		const total = itemsWithPrices.reduce(
 			(sum, item) => sum + item.price * item.quantity,
 			0
