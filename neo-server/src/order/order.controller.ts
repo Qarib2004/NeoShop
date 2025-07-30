@@ -66,6 +66,4 @@ export class OrderController {
 
 		return this.stripeService.createPayment(order.id, order.total)
 	}
-
-	
 }

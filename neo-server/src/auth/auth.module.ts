@@ -23,6 +23,12 @@ import { CloudinaryModule } from 'src/cloudinary/cloudinary.module'
 		})
 	],
 	controllers: [AuthController],
-	providers: [AuthService,PrismaService,UserService,JwtStrategy,GoogleStrategy]
+	providers: [
+		AuthService,
+		PrismaService,
+		UserService,
+		JwtStrategy,
+		GoogleStrategy
+	]
 })
 export class AuthModule {}

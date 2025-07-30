@@ -39,21 +39,20 @@ export class ColorService {
 
 	async updateColor(storeId: string, colorId: string, dto: ColorDto) {
 		return this.prisma.store.update({
-		  where: { id: storeId },
-		  data: {
-			colors: {
-			  update: {
-				where: { id: colorId },
-				data: {
-				  name: dto.name,
-				  value: dto.value
+			where: { id: storeId },
+			data: {
+				colors: {
+					update: {
+						where: { id: colorId },
+						data: {
+							name: dto.name,
+							value: dto.value
+						}
+					}
 				}
-			  }
 			}
-		  }
-		});
-	  }
-	  
+		})
+	}
 
 	async delete(id: string) {
 		await this.getById(id)

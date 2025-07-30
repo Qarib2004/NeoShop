@@ -38,21 +38,19 @@ export class CategoryService {
 		})
 	}
 
+	async update(id: string, dto: CategoryDto) {
+		await this.getById(id)
+		return this.prisma.category.update({
+			where: { id },
+			data: dto
+		})
+	}
 
-    async update(id:string,dto:CategoryDto){
-        await this.getById(id)
-        return this.prisma.category.update({
-            where:{id},
-            data:dto
-        })
-    }
+	async delete(id: string) {
+		await this.getById(id)
 
-
-    async delete(id:string){
-        await this.getById(id)
-
-        return this.prisma.category.delete({
-            where:{id}
-        })
-    }
+		return this.prisma.category.delete({
+			where: { id }
+		})
+	}
 }

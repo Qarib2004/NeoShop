@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { CreateOrderDto } from './dto/create-order.dto'
 // import { Order } from './order.entity'
-import { OrderStatus,Order } from '@prisma/client';
-
+import { OrderStatus, Order } from '@prisma/client'
 
 @Injectable()
 export class OrderService {
@@ -12,44 +11,45 @@ export class OrderService {
 	async createOrder(userId: string, data: CreateOrderDto): Promise<Order> {
 		// Для каждого item получаем продукт из БД, чтобы узнать актуальную цену
 		const itemsWithPrices = await Promise.all(
-		  data.items.map(async (item) => {
-			const product = await this.prisma.product.findUnique({
-			  where: { id: item.productId },
-			});
-			if (!product) {
-			  throw new Error(`Product with id ${item.productId} not found`);
-			}
-			return {
-			  productId: item.productId,
-			  quantity: item.quantity,
-			  price: product.price, // используем цену из базы, а не из dto
-			};
-		  }),
-		);
-	  
+			data.items.map(async item => {
+				const product = await this.prisma.product.findUnique({
+					where: { id: item.productId }
+				})
+				if (!product) {
+					throw new Error(
+						`Product with id ${item.productId} not found`
+					)
+				}
+				return {
+					productId: item.productId,
+					quantity: item.quantity,
+					price: product.price // используем цену из базы, а не из dto
+				}
+			})
+		)
+
 		// Считаем total по реальным ценам
 		const total = itemsWithPrices.reduce(
-		  (sum, item) => sum + item.price * item.quantity,
-		  0,
-		);
-	  
+			(sum, item) => sum + item.price * item.quantity,
+			0
+		)
+
 		return this.prisma.order.create({
-		  data: {
-			total,
-			userId,
-			status: OrderStatus.PENDING,
-			customerName: data.customerName,
-			customerEmail: data.customerEmail,
-			customerPhone: data.customerPhone,
-			shippingAddress: data.shippingAddress,
-			items: {
-			  create: itemsWithPrices,
+			data: {
+				total,
+				userId,
+				status: OrderStatus.PENDING,
+				customerName: data.customerName,
+				customerEmail: data.customerEmail,
+				customerPhone: data.customerPhone,
+				shippingAddress: data.shippingAddress,
+				items: {
+					create: itemsWithPrices
+				}
 			},
-		  },
-		  include: { items: true },
-		});
-	  }
-	  
+			include: { items: true }
+		})
+	}
 
 	async updateOrderStatus(
 		orderId: string,
@@ -75,28 +75,27 @@ export class OrderService {
 	async getOrderById(
 		orderId: string,
 		includePayment = false
-	  ): Promise<Order | null> {
+	): Promise<Order | null> {
 		const order = await this.prisma.order.findUnique({
-		  where: { id: orderId },
-		  include: {
-			items: {
-			  include: {
-				product: true
-			  }
+			where: { id: orderId },
+			include: {
+				items: {
+					include: {
+						product: true
+					}
+				}
 			}
-		  }
-		});
-	  
-		if (!order) return null;
-	  
+		})
+
+		if (!order) return null
+
 		if (!includePayment) {
-		  const { paymentData, ...rest } = order as any;
-		  return rest as Order;
+			const { paymentData, ...rest } = order as any
+			return rest as Order
 		}
-	  
-		return order;
-	  }
-	  
+
+		return order
+	}
 
 	async getUserOrders(userId: string): Promise<Order[]> {
 		return this.prisma.order.findMany({

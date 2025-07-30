@@ -7,7 +7,7 @@ import { ReviewDto } from './dto/review.dto'
 export class ReviewService {
 	constructor(
 		private prisma: PrismaService,
-        private productService:ProductService
+		private productService: ProductService
 	) {}
 
 	async getByStoreId(storeId: string) {
@@ -15,16 +15,16 @@ export class ReviewService {
 			where: {
 				storeId
 			},
-            include:{
-                user:true
-            }
+			include: {
+				user: true
+			}
 		})
 	}
 
-	async getById(id: string,userId:string) {
+	async getById(id: string, userId: string) {
 		const review = await this.prisma.review.findUnique({
-			where: { id,userId },
-            include:{user:true}
+			where: { id, userId },
+			include: { user: true }
 		})
 
 		if (!review) {
@@ -34,45 +34,43 @@ export class ReviewService {
 		return review
 	}
 
+	async create(
+		userId: string,
+		productId: string,
+		storeId: string,
+		dto: ReviewDto
+	) {
+		await this.productService.getById(productId)
 
-    async create(userId:string,productId:string,storeId:string,dto:ReviewDto){
+		return this.prisma.review.create({
+			data: {
+				...dto,
+				product: {
+					connect: {
+						id: productId
+					}
+				},
+				user: {
+					connect: {
+						id: userId
+					}
+				},
+				store: {
+					connect: {
+						id: storeId
+					}
+				}
+			}
+		})
+	}
 
-        await this.productService.getById(productId)
+	async delete(id: string, userId: string) {
+		await this.getById(id, userId)
 
-
-        return this.prisma.review.create({
-            data:{
-                ...dto,
-                product:{
-                    connect:{
-                        id:productId
-                    }
-                },
-                user:{
-                    connect:{
-                        id:userId
-                    }
-                },
-                store:{
-                    connect:{
-                        id:storeId
-                    }
-                }
-            }
-        })
-    }
-
-
-    async delete(id:string,userId:string){
-        await this.getById(id,userId)
-
-        return this.prisma.review.delete({
-            where:{
-                id
-            }
-        })
-    }
-
-
-
+		return this.prisma.review.delete({
+			where: {
+				id
+			}
+		})
+	}
 }

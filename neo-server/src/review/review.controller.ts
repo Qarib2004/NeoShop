@@ -34,14 +34,14 @@ export class ReviewController {
 		@Param('storeId') storeId: string,
 		@Body() dto: ReviewDto
 	) {
-		console.log('Params:', { productId, storeId });
+		console.log('Params:', { productId, storeId })
 		return this.reviewService.create(userId, productId, storeId, dto)
 	}
 
 	@HttpCode(200)
 	@Auth()
 	@Delete(':id')
-	async delete(@Param('id') id: string,@CurrentUser('id') userId:string) {
-    return this.reviewService.delete(id,userId)
-  }
+	async delete(@Param('id') id: string, @CurrentUser('id') userId: string) {
+		return this.reviewService.delete(id, userId)
+	}
 }

@@ -1,23 +1,23 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import * as cookieParser from 'cookie-parser';
-import * as dotenv from 'dotenv';
+import { NestFactory } from '@nestjs/core'
+import { AppModule } from './app.module'
+import * as cookieParser from 'cookie-parser'
+import * as dotenv from 'dotenv'
 
 async function bootstrap() {
-  dotenv.config(); 
-  const app = await NestFactory.create(AppModule);
+	dotenv.config()
+	const app = await NestFactory.create(AppModule)
 
-  app.use(cookieParser()); 
+	app.use(cookieParser())
 
-  app.enableCors({
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
-    credentials: true,
-    exposedHeaders: 'set-cookie',
-  });
+	app.enableCors({
+		origin: process.env.CLIENT_URL || 'http://localhost:3000',
+		credentials: true,
+		exposedHeaders: 'set-cookie'
+	})
 
-  const port = process.env.PORT || 5000;
-  await app.listen(port);
+	const port = process.env.PORT || 5000
+	await app.listen(port)
 
-  console.log(`App listening on port ${port}`);
+	console.log(`App listening on port ${port}`)
 }
-bootstrap();
+bootstrap()
