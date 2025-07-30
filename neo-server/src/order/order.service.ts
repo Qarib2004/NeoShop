@@ -8,7 +8,7 @@ export class OrderService {
 	constructor(private prisma: PrismaService) {}
 
 	async createOrder(userId: string, data: CreateOrderDto): Promise<Order> {
-		// Для каждого item получаем продукт из БД, чтобы узнать актуальную цену
+		
 		const itemsWithPrices = await Promise.all(
 			data.items.map(async item => {
 				const product = await this.prisma.product.findUnique({
