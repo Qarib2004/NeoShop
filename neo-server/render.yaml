@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: neo-server
+    env: node
+    buildCommand: yarn install && yarn build
+    startCommand: node dist/main.js
+    envVars:
+      - key: NODE_ENV
+        value: production
