@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { AuthModule } from './auth/auth.module'
 import { UserModule } from './user/user.module'
@@ -13,6 +13,9 @@ import { PayPalModule } from './paypal/paypal.module'
 import { CloudinaryModule } from './cloudinary/cloudinary.module'
 import { StripeModule } from './stripe/stripe.module'
 import { ReviewModule } from './review/review.module'
+import * as express from 'express';
+import { StripeWebhookMiddleware } from './stripe/stripe.middleware'
+import { RawBodyMiddleware } from './common/raw-body.middleware'
 
 @Module({
 	imports: [
@@ -32,4 +35,10 @@ import { ReviewModule } from './review/review.module'
 		ReviewModule
 	]
 })
-export class AppModule {}
+export class AppModule {
+	configure(consumer: MiddlewareConsumer) {
+	  consumer
+		.apply(RawBodyMiddleware)
+		.forRoutes({ path: 'orders/webhook', method: RequestMethod.POST });
+	}
+  }

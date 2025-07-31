@@ -8,14 +8,19 @@ import {
 	Req,
 	NotFoundException,
 	BadRequestException,
-	Headers
+	Headers,
+	HttpCode
 } from '@nestjs/common'
 import { OrderService } from './order.service'
 import { CreateOrderDto } from './dto/create-order.dto'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import { RequestWithUser } from 'src/auth/interface/request-with-user'
 import { StripeService } from 'src/stripe/stripe.service'
-import Stripe from 'stripe'
+
+
+interface RequestWithRawBody extends Request {
+	rawBody: Buffer;
+  }
 
 @Controller('orders')
 export class OrderController {
@@ -68,24 +73,39 @@ export class OrderController {
 		return this.stripeService.createPayment(order.id, order.total)
 	}
 
-	@Post('/webhook')
+
+
+	@Post('webhook')
+	@HttpCode(200)
 	async handleStripeWebhook(
-	  @Req() req: Request,
-	  @Headers('stripe-signature') signature: string
+	  @Req() req: RequestWithRawBody,
+	  @Headers('stripe-signature') signature: string | undefined
 	) {
-		console.log('🛑 WEBHOOK RECEIVED - RAW BODY:', (req as any).rawBody?.toString().substring(0, 100) + '...');
-	  const rawBody = (req as any).rawBody
-  
-	  let event: Stripe.Event
-  
-	  try {
-		event = this.stripeService.constructEvent(rawBody, signature)
-	  } catch (err) {
-		throw new BadRequestException(`Webhook signature verification failed.`)
+	  
+	  
+	  if (!signature) {
+		throw new BadRequestException('Missing stripe-signature header')
 	  }
-  
-	  await this.stripeService.handleWebhook(event)
-  
-	  return { received: true }
+
+	  if (!req.rawBody || !Buffer.isBuffer(req.rawBody)) {
+		throw new BadRequestException('Invalid request body format')
+	  }
+
+	  try {
+		const event = this.stripeService.constructEvent(req.rawBody, signature)
+
+		await this.stripeService.handleWebhook(event)
+		
+		return { received: true }
+	  } catch (err) {
+		console.error('❌ Webhook processing failed:', {
+		  error: err.message,
+		  bodyLength: req.rawBody?.length || 0,
+		  signature: signature
+		})
+		throw new BadRequestException(`Webhook error: ${err.message}`)
+	  }
 	}
+
+
 }

@@ -18,12 +18,44 @@ export class StripeService {
 	}
 
 	constructEvent(payload: Buffer, signature: string): Stripe.Event {
-		const webhookSecret = this.configService.get<string>('WEBHOOK_SECRET')
-		if (!webhookSecret) throw new Error('Webhook secret not found')
+		const webhookSecret = this.configService.get('WEBHOOK_SECRET')
+		
+		if (!webhookSecret) {
+		  throw new Error('Stripe webhook secret not configured')
+		}
 	
-		return this.stripe.webhooks.constructEvent(payload, signature, webhookSecret)
-	}
+		
+		const payloadStart = payload.toString('utf8', 0, Math.min(100, payload.length))
+		console.log('Payload start:', payloadStart)
 	
+		try {
+		  const event = this.stripe.webhooks.constructEvent(
+			payload,
+			signature,
+			webhookSecret,
+			300 
+		  )
+		  
+		  return event
+		} catch (err) {
+		  console.error('❌ Signature verification failed:', {
+			payloadLength: payload.length,
+			signature: signature,
+			error: err.message,
+			webhookSecretLength: webhookSecret?.length || 0,
+			payloadPreview: payload.toString('utf8', 0, 50)
+		  })
+		  
+		  if (err.message.includes('timestamp')) {
+			console.error('Timestamp issue - check server time synchronization')
+		  }
+		  if (err.message.includes('signatures')) {
+			console.error('Signature mismatch - check webhook secret and payload integrity')
+		  }
+		  
+		  throw err
+		}
+	  }
 
 	async createPayment(orderId: string, total: number) {
 		const session = await this.stripe.checkout.sessions.create({
@@ -51,59 +83,48 @@ export class StripeService {
 		return { id: session.id, url: session.url }
 	}
 
-	async handleWebhook(event: Stripe.Event) {
-		console.log('=== STRIPE WEBHOOK RECEIVED ===');
-		console.log(`Event type: ${event.type}`);
-		console.log(`Event ID: ${event.id}`);
-		console.log('Event data:', JSON.stringify(event.data, null, 2));
-	  
-		try {
-		  switch (event.type) {
-			case 'checkout.session.completed':
-			  console.log('Processing checkout.session.completed event...');
-			  const session = event.data.object as Stripe.Checkout.Session;
-			  console.log('Session ID:', session.id);
-			  console.log('Payment status:', session.payment_status);
-			  console.log('Metadata:', session.metadata);
-	  
-			  const orderId = session.metadata?.orderId;
-			  if (!orderId) {
-				console.error('❌ Order ID not found in session metadata');
-				break;
-			  }
-	  
-			  console.log(`Updating order ${orderId} to COMPLETED status`);
-			  await this.orderService.updateOrderStatus(orderId, 'COMPLETED' as OrderStatus);
-			  await this.orderService.addPaymentData(orderId, session.id, session);
-			  console.log(`✅ Order ${orderId} successfully updated`);
-			  break;
-	  
-			case 'checkout.session.expired':
-			  console.log('Processing checkout.session.expired event...');
-			  const expiredSession = event.data.object as Stripe.Checkout.Session;
-			  console.log('Expired session ID:', expiredSession.id);
-			  console.log('Metadata:', expiredSession.metadata);
-	  
-			  const expiredOrderId = expiredSession.metadata?.orderId;
-			  if (!expiredOrderId) {
-				console.error('❌ Order ID not found in expired session metadata');
-				break;
-			  }
-	  
-			  console.log(`Updating order ${expiredOrderId} to CANCELLED status`);
-			  await this.orderService.updateOrderStatus(expiredOrderId, 'CANCELLED' as OrderStatus);
-			  console.log(`✅ Order ${expiredOrderId} marked as expired`);
-			  break;
-	  
-			default:
-			  console.log(`⚠️ Unhandled event type: ${event.type}`);
-		  }
-		} catch (error) {
-		  console.error('‼️ Error processing webhook event:', error);
-		  throw error; // Перебрасываем ошибку для обработки на верхнем уровне
-		}
-	  
-		console.log('=== WEBHOOK PROCESSING COMPLETE ===');
-	  }
+	 async handleWebhook(event: Stripe.Event) {
+
+
+    try {
+      switch (event.type) {
+        case 'checkout.session.completed':
+          const session = event.data.object as Stripe.Checkout.Session
+          
+          const orderId = session.metadata?.orderId
+          if (!orderId) {
+            console.error('Order ID not found in metadata')
+            return
+          }
+
+          await this.orderService.updateOrderStatus(orderId, 'COMPLETED' as OrderStatus)
+          await this.orderService.addPaymentData(orderId, session.id, session)
+          break
+
+        case 'checkout.session.expired':
+          const expiredSession = event.data.object as Stripe.Checkout.Session
+          
+          const expiredOrderId = expiredSession.metadata?.orderId
+          if (!expiredOrderId) {
+            console.error('Order ID not found in expired session metadata')
+            return
+          }
+
+          await this.orderService.updateOrderStatus(expiredOrderId, 'CANCELLED' as OrderStatus)
+          break
+
+        case 'payment_intent.succeeded':
+          const paymentIntent = event.data.object as Stripe.PaymentIntent
+          break
+
+        default:
+          console.log(`Unhandled event type: ${event.type}`)
+      }
+    } catch (error) {
+      throw error
+    }
+
+    console.log('=== WEBHOOK PROCESSING COMPLETE ===')
+  }
 
 }
