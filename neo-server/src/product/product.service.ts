@@ -109,13 +109,11 @@ export class ProductService {
 				take: 6
 			})
 
-			console.log('Popular products (raw):', mostPopularProducts)
 
 			if (
 				mostPopularProducts.length === 0 ||
 				mostPopularProducts.every(item => !item.productId)
 			) {
-				console.log('No valid orders found, returning newest products.')
 				return this.getFallbackProducts()
 			}
 
@@ -123,7 +121,6 @@ export class ProductService {
 				.map(item => item.productId)
 				.filter((id): id is string => !!id)
 
-			console.log('Filtered product IDs:', productIds)
 
 			if (productIds.length === 0) {
 				return this.getFallbackProducts()
@@ -134,10 +131,8 @@ export class ProductService {
 				include: { category: true }
 			})
 
-			console.log('Final popular products:', products)
 			return products
 		} catch (error) {
-			console.error('Error in getMostPopular:', error)
 			return this.getFallbackProducts()
 		}
 	}

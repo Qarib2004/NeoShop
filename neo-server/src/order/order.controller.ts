@@ -7,13 +7,15 @@ import {
 	UseGuards,
 	Req,
 	NotFoundException,
-	BadRequestException
+	BadRequestException,
+	Headers
 } from '@nestjs/common'
 import { OrderService } from './order.service'
 import { CreateOrderDto } from './dto/create-order.dto'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import { RequestWithUser } from 'src/auth/interface/request-with-user'
 import { StripeService } from 'src/stripe/stripe.service'
+import Stripe from 'stripe'
 
 @Controller('orders')
 export class OrderController {
@@ -64,5 +66,26 @@ export class OrderController {
 		}
 
 		return this.stripeService.createPayment(order.id, order.total)
+	}
+
+	@Post('/webhook')
+	async handleStripeWebhook(
+	  @Req() req: Request,
+	  @Headers('stripe-signature') signature: string
+	) {
+		console.log('🛑 WEBHOOK RECEIVED - RAW BODY:', (req as any).rawBody?.toString().substring(0, 100) + '...');
+	  const rawBody = (req as any).rawBody
+  
+	  let event: Stripe.Event
+  
+	  try {
+		event = this.stripeService.constructEvent(rawBody, signature)
+	  } catch (err) {
+		throw new BadRequestException(`Webhook signature verification failed.`)
+	  }
+  
+	  await this.stripeService.handleWebhook(event)
+  
+	  return { received: true }
 	}
 }

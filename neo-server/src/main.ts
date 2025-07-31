@@ -2,10 +2,17 @@ import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import * as cookieParser from 'cookie-parser'
 import * as dotenv from 'dotenv'
+import * as express from 'express';
 
 async function bootstrap() {
 	dotenv.config()
 	const app = await NestFactory.create(AppModule)
+
+
+	app.use(
+		'/orders/webhook',
+		express.raw({ type: 'application/json' })
+	  )
 
 	app.use(cookieParser())
 

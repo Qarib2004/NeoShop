@@ -16,7 +16,7 @@ model User {
   password String?
 
   name    String  @default("not name")
- picture String  @default("/uploads/no-user-image.png")
+ picture String  @default("https://www.pngmart.com/files/23/Profile-PNG-Photo.png")
   stores   Store[]
 
   favorites Product[]
